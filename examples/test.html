@@ -7,42 +7,81 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="../vertebrate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-<script src="../../Backbone.js"></script>
 <script>
 
 Vertebrate.set('url','json/test.json')
 
-var vert = Vertebrate.Model.Extend({
+var section = Vertebrate.Model.Extend(/*{
     attributes: {
-        "when":"set at extend"
+        "crn":null,
+        "subj":null,
+        "crs":null,
+        "sec":null,
+        "title":null,
+        "crd":null,
+        "days":null,
+        "stime":null,
+        "etime":null,
+        "building":null,
+        "room":null,
+        "sdate":null,
+        "edate":null,
+        "instructors":null,
+        "cap":null,
+        "wait":null,
+        "enrolled":null,
+        "xst":null,
+        "approv":null,
+        "web":null,
+        "crs_cat":null,
+        "dmeth":null,
+        "pace":null,
+        "mt_time":null,
+        "atten":null,
+        "si":null,
+        "code1":null,
+        "fee1":null,
+        "code2":null,
+        "fee2":null,
+        "code3":null,
+        "fee3":null,
+        "code4":null,
+        "fee4":null,
+        "code5":null,
+        "fee5":null,
+        "code6":null,
+        "fee6":null,
+        "importtime":null,
+        "contacthrs":null,
+        "sitecode":null,
+        "tuiw":null
     }
+}*/);
+
+var collection = Vertebrate.Collection.Extend({
+    model: section,
+    attributes: {
+        url:"json/test.json"
+    }
+});
+
+var collec = new collection();
+
+$('body').on('vertebrate.changeattr',function(a,b,c,d) {
+    console.log(a);
+    console.log(b);
+    console.log(c);
+    console.log(d);
+});
+
+var promise = collec.fetch();
+$.when(promise).done(function() {
+    model = collec.find(1);
+    model.set('crn',12345);
+    model.get('crn');
 })
 
-var bone = $.extend(Vertebrate.Model,{
-    attributes: {
-        "when":"set at extend"
-    }
-})
 
-var collar = new bone({
-    attributes: {
-        "now":"new object"
-    }
-})
-
-var collec = Vertebrate.Collection.Extend({
-    models: [vert,Vertebrate.Model.Extend({attributes:{"test":"whynot"}})],
-    attributes: {
-        url:"why should i"
-    }
-})
-
-var vert2 = new vert({ attributes: {"when":"set at new object"}});
-var vert3 = new vert({ attributes: {"test":true}});
-
-vert2.set('test3','not quite true');
-
-//collec.fetch()
 </script>
 
 </body>
