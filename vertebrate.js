@@ -6,12 +6,7 @@ if (typeof($) == 'undefined') {
 *
 
 In progress:
-* add change events for listening with $ on
-* add changed attribute to mark what keys changed
-* add delete / remove functions
-
-*change back to functions... extend needs to return the function so we can
-  use new Modelname() to construct new models
+* add delete functions
 
 *
 */
@@ -34,7 +29,6 @@ var Vertebrate = {
                 var self = this;
                 this.attributes[attr] = value;
                 this.changedattrs.push(attr);
-                console.log('setting');
                 $('body').trigger('vertebrate.changeattr',[self,self.attributes,self.changedattrs]);
                 return true;
             },
@@ -83,6 +77,17 @@ Vertebrate.Model = function( options ) {
         })
         return promise;
     };
+    this.delete = function( callback ) {
+        var promise = $.ajax({
+            url: typeof(this.get('url')) == 'undefined' ? Vertebrate.get('url') : this.get('url'),
+            method: 'DELETE',
+            data: this.get(),
+            success: function( data, status, xhr ) {
+                if (typeof(callback) == 'function') callback( data, status, xhr );
+            }
+        });
+        return promise;
+    }
 };
 
 Vertebrate.Model.Extend = function( options ) {
@@ -167,6 +172,7 @@ Vertebrate.Collection = function(options) {
         self.models = self.models.filter(function() {
             return this != model;
         });
+        $('body').trigger('vertebrate.removed',[self,self.removed,self.models]);
         return true;
     }
 };

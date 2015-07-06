@@ -74,6 +74,12 @@ $('body').on('vertebrate.changeattr',function(a,b,c,d) {
     console.log(d);
 });
 
+$('body').on('vertebrate.removed',function(a,b,c) {
+    console.log(a);
+    console.log(b);
+    console.log(c);
+})
+
 var promise = collec.fetch();
 $.when(promise).done(function() {
     model = collec.find(1);
