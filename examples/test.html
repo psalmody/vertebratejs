@@ -6,16 +6,43 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="../vertebrate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="../../Backbone.js"></script>
 <script>
 
-var vert = new Vertebrate.Model({
-    "test":true,
-    "test2":"true things"
+Vertebrate.set('url','json/test.json')
+
+var vert = Vertebrate.Model.Extend({
+    attributes: {
+        "when":"set at extend"
+    }
 })
 
-var collec = new Vertebrate.Collection();
+var bone = $.extend(Vertebrate.Model,{
+    attributes: {
+        "when":"set at extend"
+    }
+})
 
-collec.fetch()
+var collar = new bone({
+    attributes: {
+        "now":"new object"
+    }
+})
+
+var collec = Vertebrate.Collection.Extend({
+    models: [vert,Vertebrate.Model.Extend({attributes:{"test":"whynot"}})],
+    attributes: {
+        url:"why should i"
+    }
+})
+
+var vert2 = new vert({ attributes: {"when":"set at new object"}});
+var vert3 = new vert({ attributes: {"test":true}});
+
+vert2.set('test3','not quite true');
+
+//collec.fetch()
 </script>
 
 </body>
