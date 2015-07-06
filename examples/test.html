@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <script>
 
-Vertebrate.set('url','json/test.json')
+Vertebrate.set('url','php/handler.php');
 
 var section = Vertebrate.Model.Extend(/*{
     attributes: {
@@ -59,10 +59,7 @@ var section = Vertebrate.Model.Extend(/*{
 }*/);
 
 var collection = Vertebrate.Collection.Extend({
-    model: section,
-    attributes: {
-        url:"json/test.json"
-    }
+    model: section
 });
 
 var collec = new collection();

@@ -74,7 +74,7 @@ Vertebrate.Model = function( options ) {
                 self.changedattrs = [];
                 if (typeof(callback) == 'function') callback( data, status, xhr );
             }
-        })
+        });
         return promise;
     };
     this.delete = function( callback ) {
@@ -87,7 +87,7 @@ Vertebrate.Model = function( options ) {
             }
         });
         return promise;
-    }
+    };
 };
 
 Vertebrate.Model.Extend = function( options ) {
@@ -98,7 +98,7 @@ Vertebrate.Model.Extend = function( options ) {
     model.prototype = Object.create(Vertebrate.Model.prototype);
     model.prototype.constructor = model;
     return model;
-}
+};
 
 Vertebrate.Collection = function(options) {
     this.model = false;
@@ -111,7 +111,7 @@ Vertebrate.Collection = function(options) {
         var promise = $.ajax({
             url: typeof(this.get('url')) == 'undefined' ? Vertebrate.get('url') : this.get('url'),
             method: 'POST',
-            data: JSON.stringify([this.get(),this.models]),
+            data: {"data":JSON.stringify([this.get(),this.models])},
             success: function( data, status, xhr ) {
                 if (typeof(callback) == 'function') callback( data, status, xhr );
             }
@@ -126,15 +126,16 @@ Vertebrate.Collection = function(options) {
         var promise = $.ajax({
             url: typeof(this.get('url')) == 'undefined' ? Vertebrate.get('url') : this.get('url'),
             method: 'GET',
+            dataType: 'JSON',
             data: JSON.stringify(this.get()),
             success: function( data, status, xhr ) {
                 self.models = [];
                 $.each(data,function(i) {
                     self.models.push(new self.model({"attributes":data[i]}));
-                })
+                });
                 if (typeof(callback) == 'function') callback( data, status, xhr );
             }
-        })
+        });
         return promise;
     };
     this.find = function( term, attr ) {
@@ -147,11 +148,11 @@ Vertebrate.Collection = function(options) {
                     found = true;
                     founds.push(this);
                 }
-            })
+            });
             if (!found) return false;
             return founds;
         } else {
-            $.each(self.models,function(k,v) {
+            $.each(self.models,function(k) {
                 if (k == term) {
                     found = this;
                     return false;
@@ -174,7 +175,7 @@ Vertebrate.Collection = function(options) {
         });
         $('body').trigger('vertebrate.removed',[self,self.removed,self.models]);
         return true;
-    }
+    };
 };
 
 Vertebrate.Collection.Extend = function( options ) {
@@ -185,4 +186,4 @@ Vertebrate.Collection.Extend = function( options ) {
     collection.prototype = Object.create(Vertebrate.Collection.prototype);
     collection.prototype.constructor = collection;
     return collection;
-}
+};
