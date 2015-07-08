@@ -200,8 +200,8 @@ In progress:
         this.max = function(attr) {
             var greatest = 0;
             $.each(self.models,function(k,v) {
-                if (v[attr] > greatest) {
-                    greatest = v[attr];
+                if (v.attributes[attr] > greatest) {
+                    greatest = v.attributes[attr];
                 }
             });
             return greatest;
