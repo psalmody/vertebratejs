@@ -23,37 +23,46 @@ In progress:
             return this.settings[setting] = value;
         },
         shared: {
-            fn: {
-                attributes: {},
-                changedattrs: [],
-                set: function(attr, value) {
-                    var self = this;
+            fn: function() {
+                this.attributes = {};
+                this.changedattrs = [];
+                this.set = function(attr, value) {
                     this.attributes[attr] = value;
                     this.changedattrs.push(attr);
-                    $('body').trigger('vertebrate.changeattr', [self, self.attributes, self.changedattrs]);
+                    $('body').trigger('vertebrate.changeattr', [this, this.attributes, this.changedattrs]);
                     return true;
-                },
-                get: function(attr) {
+                };
+                this.get = function(attr) {
                     if (typeof(attr) == 'undefined') return this.attributes;
                     return this.attributes[attr];
-                },
-                has: function(attr) {
+                };
+                this.has = function(attr) {
                     return (typeof(this.attributes[attr]) == 'undefined') ? false : true;
-                },
-                hasChanged: function(attr) {
+                };
+                this.hasChanged = function(attr) {
                     var attr = typeof(attr) == 'undefined' ? false : attr;
                     if (!attr) {
                         return this.changedattrs.length > 0 ? true : false;
                     }
                     return this.changedattrs.indexOf(attr) >= 0 ? true : false;
-                }
+                };
             }
         }
     };
 
     Vertebrate.Model = function(options) {
         var self = this;
-        $.extend(this, Vertebrate.shared.fn, options);
+        Vertebrate.shared.fn.call(this);
+        var options = typeof(options) == 'undefined' ? false : options;
+        if (options) {
+            $.each(options,function(k,v){
+                if (typeof(v) == 'object') {
+                    self[k] = $.extend(self[k],v);
+                } else {
+                    self[k] = v;
+                }
+            })
+        }
         this.save = function(callback) {
             var promise = $.ajax({
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
@@ -92,10 +101,24 @@ In progress:
         };
     };
 
+    Vertebrate.Model.prototype = Object.create(Vertebrate.shared.fn);
+    Vertebrate.Model.prototype.constructor = Vertebrate.Model;
+
     Vertebrate.Model.Extend = function(options) {
-        function model(opts) {
+        var model = function(opts) {
             Vertebrate.Model.call(this, options);
-            $.extend(this, opts);
+            var self = this;
+            var opts = typeof(opts) == 'undefined' ? false : opts;
+            if (opts) {
+                $.each(opts,function(k,v){
+                    if (typeof(v) == 'object') {
+                        $.extend(self[k],v);
+                    } else {
+                        self[k] = v;
+                    }
+                })
+            }
+            return this;
         }
         model.prototype = Object.create(Vertebrate.Model.prototype);
         model.prototype.constructor = model;
@@ -103,12 +126,19 @@ In progress:
     };
 
     Vertebrate.Collection = function(options) {
+        Vertebrate.shared.fn.call(this, options);
         this.model = false;
         this.models = [];
         this.added = [];
         this.removed = [];
         var self = this;
-        $.extend(this, Vertebrate.shared.fn, options);
+        $.each(options,function(k,v){
+            if (typeof(v) == 'object') {
+                $.extend(self[k],v);
+            } else {
+                self[k] = v;
+            }
+        })
         this.save = function(callback) {
             var promise = $.ajax({
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
@@ -136,8 +166,9 @@ In progress:
                 success: function(data, status, xhr) {
                     self.models = [];
                     $.each(data, function(i) {
+                        debugger;
                         self.models.push(new self.model({
-                            "attributes": data[i]
+                            attributes: data[i]
                         }));
                     });
                     self.removed = [];
@@ -147,39 +178,21 @@ In progress:
             return promise;
         };
         this.find = function(term, attr) {
-            var attr = typeof(attr) == 'undefined' ? false : attr;
+            var attr = (typeof(attr) == 'undefined') ? false : attr;
+            var term = (attr) ? term.toString() : Number(term);
             var found = false;
-
-            function iterate(t, a) {
+            if (attr) {
                 var founds = [];
                 $.each(self.models, function(k, v) {
-                    var term = typeof(v.attributes[a]) == 'string' ? t.toString() : Number(t);
-                    if (v.attributes[a] == term) {
+                    if (v.attributes[attr] == term) {
                         found = true;
                         founds.push(this);
                     }
                 });
                 if (!found) return false;
-                if (founds.length == 1) return founds[0];
                 return founds;
-            }
-            switch (typeof(term)) {
-                case 'string':
-                    if (attr) {
-                        return iterate(term, attr);
-                    } else {
-                        if (isNaN(term)) {
-                            console.log('Error: Collection.find() expects either a number as the first parameter, or two parameters.');
-                            return found;
-                        } else {
-                            return self.models[Number(term)];
-                        }
-                    }
-                    break;
-                case 'number':
-                    if (attr) return iterate(self);
-                    return self.models[term];
-                    break;
+            } else {
+                return self.models[term];
             }
         };
         this.add = function(model) {
@@ -187,20 +200,18 @@ In progress:
             self.added.push(model);
         };
         this.remove = function(model) {
-            if (self.models.indexOf(model) == -1) {
-                return false;
-            }
-            self.removed.push(model);
-            self.models = self.models.filter(function() {
-                return this != model;
+            var newmodels = self.models.filter(function(m) {
+                return m != model;
             });
+            self.models = newmodels;
+            self.removed.push(model);
             $('body').trigger('vertebrate.removed', [self, self.removed, self.models]);
             return true;
         };
         this.max = function(attr) {
             var greatest = 0;
             $.each(self.models,function(k,v) {
-                if (v.attributes[attr] > greatest) {
+                if (Number(v.attributes[attr]) > greatest) {
                     greatest = v.attributes[attr];
                 }
             });
@@ -208,10 +219,20 @@ In progress:
         };
     };
 
+    Vertebrate.Collection.prototype = Object.create(Vertebrate.shared.fn);
+    Vertebrate.Collection.prototype.constructor = Vertebrate.Collection;
+
     Vertebrate.Collection.Extend = function(options) {
         function collection(opts) {
             Vertebrate.Collection.call(this, options);
-            $.extend(this, opts);
+            var self = this;
+            $.each(options,function(k,v){
+                if (typeof(v) == 'object') {
+                    $.extend(self[k],v);
+                } else {
+                    self[k] = v;
+                }
+            })
         }
         collection.prototype = Object.create(Vertebrate.Collection.prototype);
         collection.prototype.constructor = collection;
