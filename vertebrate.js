@@ -56,36 +56,36 @@ In progress:
         $.extend(this, Vertebrate.shared.fn, options);
         this.save = function(callback) {
             var promise = $.ajax({
-                url: typeof(this.get('url')) == 'undefined' ? Vertebrate.get('url') : this.get('url'),
+                url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'POST',
                 data: { data: JSON.stringify(this.get()) },
                 success: function(data, status, xhr) {
                     self.changedattrs = [];
-                    if (typeof(callback) == 'function') callback(data, status, xhr);
+                    if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
                 }
             });
             return promise;
         };
         this.fetch = function(callback) {
             var promise = $.ajax({
-                url: typeof(this.get('url')) == 'undefined' ? Vertebrate.get('url') : this.get('url'),
+                url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'GET',
                 data: this.get(),
                 success: function(data, status, xhr) {
                     self.changedattrs = [];
-                    if (typeof(callback) == 'function') callback(data, status, xhr);
+                    if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
                 }
             });
             return promise;
         };
         this.delete = function(callback) {
             var promise = $.ajax({
-                url: typeof(this.get('url')) == 'undefined' ? Vertebrate.get('url') : this.get('url'),
+                url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'DELETE',
                 data: JSON.stringify(this.get()),
                 success: function(data, status, xhr) {
                     $('body').trigger('vertebrate.deleted', [self, self.attributes, data, status, xhr]);
-                    if (typeof(callback) == 'function') callback(data, status, xhr);
+                    if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
                 }
             });
             return promise;
@@ -111,14 +111,14 @@ In progress:
         $.extend(this, Vertebrate.shared.fn, options);
         this.save = function(callback) {
             var promise = $.ajax({
-                url: typeof(this.get('url')) == 'undefined' ? Vertebrate.get('url') : this.get('url'),
+                url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'POST',
                 data: {
                     "data": JSON.stringify([this.get(), this.models])
                 },
                 success: function(data, status, xhr) {
                     self.removed = [];
-                    if (typeof(callback) == 'function') callback(data, status, xhr);
+                    if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
                 }
             });
             return promise;
@@ -129,7 +129,7 @@ In progress:
                 return false;
             }
             var promise = $.ajax({
-                url: typeof(this.get('url')) == 'undefined' ? Vertebrate.get('url') : this.get('url'),
+                url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'GET',
                 dataType: 'JSON',
                 data: this.get(),
@@ -141,7 +141,7 @@ In progress:
                         }));
                     });
                     self.removed = [];
-                    if (typeof(callback) == 'function') callback(data, status, xhr);
+                    if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
                 }
             });
             return promise;
@@ -150,10 +150,11 @@ In progress:
             var attr = typeof(attr) == 'undefined' ? false : attr;
             var found = false;
 
-            function iterate(which) {
+            function iterate(t, a) {
                 var founds = [];
-                $.each(which.models, function(k, v) {
-                    if (v.attributes[attr] == term) {
+                $.each(self.models, function(k, v) {
+                    var term = typeof(v.attributes[a]) == 'string' ? t.toString() : Number(t);
+                    if (v.attributes[a] == term) {
                         found = true;
                         founds.push(this);
                     }
@@ -165,7 +166,7 @@ In progress:
             switch (typeof(term)) {
                 case 'string':
                     if (attr) {
-                        return iterate(self);
+                        return iterate(term, attr);
                     } else {
                         if (isNaN(term)) {
                             console.log('Error: Collection.find() expects either a number as the first parameter, or two parameters.');
@@ -195,6 +196,15 @@ In progress:
             });
             $('body').trigger('vertebrate.removed', [self, self.removed, self.models]);
             return true;
+        };
+        this.max = function(attr) {
+            var greatest = 0;
+            $.each(self.models,function(k,v) {
+                if (v[attr] > greatest) {
+                    greatest = v[attr];
+                }
+            });
+            return greatest;
         };
     };
 
