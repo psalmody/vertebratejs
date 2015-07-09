@@ -1,15 +1,11 @@
+/**
+* Vertebrate.js 0.1.2
+* https://github.com/psalmody/vertebratejs
+*/
 if (typeof($) == 'undefined') {
     console.log('Vertebrate.js requires jQuery 1.11+');
 }
 
-/**
-*
-
-In progress:
-* add delete functions
-
-*
-*/
 (function() {
 
     Vertebrate = {
@@ -166,7 +162,6 @@ In progress:
                 success: function(data, status, xhr) {
                     self.models = [];
                     $.each(data, function(i) {
-                        debugger;
                         self.models.push(new self.model({
                             attributes: data[i]
                         }));
