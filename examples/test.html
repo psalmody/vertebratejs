@@ -21,127 +21,102 @@ input[name="zip"] {
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="../vertebrate.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="external/js/tmpl.js"></script>
 <script>
+$(function() {
+    /**
+    * First, setup model and collection
+    */
+    Vertebrate.set('url','php/handler.php');
 
-// Simple JavaScript Templating
-// John Resig - http://ejohn.org/ - MIT Licensed
-(function(){
-  var cache = {};
-
-  this.tmpl = function tmpl(str, data){
-    // Figure out if we're getting a template, or if we need to
-    // load the template - and be sure to cache the result.
-    var fn = !/\W/.test(str) ?
-      cache[str] = cache[str] ||
-        tmpl(document.getElementById(str).innerHTML) :
-
-      // Generate a reusable function that will serve as a template
-      // generator (and which will be cached).
-      new Function("obj",
-        "var p=[],print=function(){p.push.apply(p,arguments);};" +
-
-        // Introduce the data as local variables using with(){}
-        "with(obj){p.push('" +
-
-        // Convert the template into pure JavaScript
-        str
-          .replace(/[\r\t\n]/g, " ")
-          .split("<%").join("\t")
-          .replace(/((^|%>)[^\t]*)'/g, "$1\r")
-          .replace(/\t=(.*?)%>/g, "',$1,'")
-          .split("\t").join("');")
-          .split("%>").join("p.push('")
-          .split("\r").join("\\'")
-      + "');}return p.join('');");
-
-    // Provide some basic currying to the user
-    return data ? fn( data ) : fn;
-  };
-})();
-
-Vertebrate.set('url','php/handler.php');
-
-var player = Vertebrate.Model.Extend({
-    attributes: {
-        id: 0,
-        first_name: '',
-        mi: '',
-        last_name: '',
-        age: 0,
-        address: '',
-        city: '',
-        state: '',
-        zip: '',
-        email: ''
-    }
-});
-
-var team = Vertebrate.Collection.Extend({
-    model: player,
-    attributes: {
-        orderBy: 'last_name, first_name'
-    }
-});
-
-var ourteam = new team();
-
-$('body').on('vertebrate.changeattr',function(a,b,c,d) {
-    //console.log(a);
-    //console.log(b);
-    //console.log(c);
-    //console.log(d);
-});
-
-$('body').on('vertebrate.removed',function(a,b,c) {
-    //console.log(a);
-    //console.log(b);
-    //console.log(c);
-})
-
-var promise = ourteam.fetch();
-$.when(promise).done(function() {
-    ourteam.render();
-    model = ourteam.find(1);
-    //model.set('crn',12345);
-    model.get('crn');
-})
-
-ourteam.render = function( ) {
-    $('table tbody').empty();
-    $.each(this.models,function(k,v) {
-        $('table tbody').append(tmpl('player_tmpl',v.attributes))
-    })
-}
-
-$('body').on('change','input',function() {
-    var model = ourteam.find($(this).closest('tr').data('modelid'),'id');
-    model.set($(this).attr('name'),$(this).val());
-});
-
-$('body').on('click','.save',function() {
-    var model = ourteam.find($(this).closest('tr').data('modelid'),'id');
-    console.log(model);
-    model.save();
-    ourteam.render();
-});
-
-$('body').on('click','.delete',function() {
-    var tr = $(this).closest('tr');
-    var model = ourteam.find(tr.data('modelid'),'id');
-    console.log(model);
-    model.delete(function() {
-        ourteam.remove(model);
-        tr.remove();
+    player = Vertebrate.Model.Extend({
+        attributes: {
+            id: 0,
+            first_name: '',
+            mi: '',
+            last_name: '',
+            age: 0,
+            address: '',
+            city: '',
+            state: '',
+            zip: '',
+            email: '',
+            extra: 'hello'
+        }
     });
-});
 
-$('#addRow').click(function() {
-    ourteam.add(new player());
-    ourteam.render();
-});
+    team = Vertebrate.Collection.Extend({
+        model: player,
+        attributes: {
+            orderBy: 'last_name, first_name'
+        }
+    });
 
+    /* add a render function when creating the collection */
+    ourteam = new team({
+        //add a render function for my view
+        render: function() {
+            $('table tbody').empty();
+            $.each(this.models,function(k,v) {
+                $('table tbody').append(tmpl('player_tmpl',v.attributes))
+            })
+        }
+    });
 
+    /**
+    * Let's handle events for view
+    */
+
+    $(document).on('vertebrate:added',function(e,collection, added, allmodels) {
+        //new model added to collection
+        console.log('added',added);
+        console.log('Now have ' + allmodels.length + ' models.');
+        collection.render();
+    }).on('vertebrate:removed',function(e,collection, removed, models) {
+        //removed model from collection
+        console.log('removed some model');
+    }).on('vertebrate:fetched',function(e,collection, models) {
+        //fetched data from collection
+        console.log('Fetched from database.');
+        collection.render();
+    }).on('vertebrate:changeattr',function(e,model, attributes, changedattributes) {
+        //changed attribute of model
+        console.log('Some model had an attribute change:');
+        console.log(model, attributes, changedattributes);
+    }).on('vertebrate:deleted',function(e,model, attributes, ajaxdata, ajaxstatus, xhr) {
+        //deleted a model
+        console.log('Deleted some model.');
+        console.log(model, attributes, ajaxdata, ajaxstatus, xhr);
+    })
+
+    $('body').on('change','input',function() {
+        //set values on input change
+        var model = ourteam.find($(this).closest('tr').data('modelid'),'id');
+        model.set($(this).attr('name'),$(this).val());
+    }).on('click','.save',function() {
+        //save model on save click
+        var model = ourteam.find($(this).closest('tr').data('modelid'),'id');
+        model.save();
+        ourteam.render();
+    }).on('click','.delete',function() {
+        var tr = $(this).closest('tr');
+        var model = ourteam.find(tr.data('modelid'),'id');
+        model.delete(function() {
+            ourteam.remove(model);
+            tr.remove();
+        });
+    });
+
+    $('#addRow').click(function() {
+        ourteam.add(new player());
+    });
+
+    /**
+    * OK - All setup, let's get the team
+    */
+    ourteam.fetch();
+
+})
 </script>
 
 <script type="text/html" id="player_tmpl">
