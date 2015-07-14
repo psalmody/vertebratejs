@@ -1,5 +1,5 @@
 /**
-* Vertebrate.js 0.2.0
+* Vertebrate.js 0.2.1
 * https://github.com/psalmody/vertebratejs
 */
 
@@ -27,6 +27,7 @@
                 this.set = function(attr, value) {
                     this.attributes[attr] = value;
                     this.changedattrs.push(attr);
+                    $([this]).trigger('vertebrate:changeattr', [this, this.attributes, this.changedattrs]);
                     $(document).trigger('vertebrate:changeattr', [this, this.attributes, this.changedattrs]);
                     return true;
                 };
@@ -92,6 +93,7 @@
                 method: 'DELETE',
                 data: JSON.stringify(this.get()),
                 success: function(data, status, xhr) {
+                    $([self]).trigger('vertebrate:deleted', [self, self.attributes, data, status, xhr]);
                     $(document).trigger('vertebrate:deleted', [self, self.attributes, data, status, xhr]);
                     if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
                 }
@@ -174,6 +176,7 @@
                         self.models.push(new self.model(data[i]));
                     });
                     self.removed = [];
+                    $([self]).trigger('vertebrate:fetched',[self.models]);
                     $(document).trigger('vertebrate:fetched',[self,self.models]);
                     if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
                 }
@@ -232,6 +235,7 @@
         this.add = function(model) {
             self.added.push(model);
             self.models.push(model);
+            $([self]).trigger('vertebrate:added', [self.added, self.models]);
             $(document).trigger('vertebrate:added', [self, self.added, self.models]);
             return self.models.length;
         };
@@ -241,6 +245,7 @@
             });
             self.models = newmodels;
             self.removed.push(model);
+            $([self]).trigger('vertebrate:removed', [self.removed, self.models]);
             $(document).trigger('vertebrate:removed', [self, self.removed, self.models]);
             return self.models.length;
         };

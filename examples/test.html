@@ -67,19 +67,21 @@ $(function() {
     * Let's handle events for view
     */
 
-    $(document).on('vertebrate:added',function(e,collection, added, allmodels) {
+    $([ourteam]).on('vertebrate:added',function(e, added, allmodels) {
         //new model added to collection
         console.log('added',added);
         console.log('Now have ' + allmodels.length + ' models.');
-        collection.render();
-    }).on('vertebrate:removed',function(e,collection, removed, models) {
+        this.render();
+    }).on('vertebrate:removed',function(e, removed, models) {
         //removed model from collection
         console.log('removed some model');
-    }).on('vertebrate:fetched',function(e,collection, models) {
+    }).on('vertebrate:fetched',function(e, models) {
         //fetched data from collection
         console.log('Fetched from database.');
-        collection.render();
-    }).on('vertebrate:changeattr',function(e,model, attributes, changedattributes) {
+        this.render();
+    });
+
+    $(document).on('vertebrate:changeattr',function(e,model, attributes, changedattributes) {
         //changed attribute of model
         console.log('Some model had an attribute change:');
         console.log(model, attributes, changedattributes);
@@ -87,7 +89,7 @@ $(function() {
         //deleted a model
         console.log('Deleted some model.');
         console.log(model, attributes, ajaxdata, ajaxstatus, xhr);
-    })
+    });
 
     $('body').on('change','input',function() {
         //set values on input change
