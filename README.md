@@ -1,4 +1,4 @@
-# Vertebrate JS 0.2.0
+# Vertebrate JS 0.2.1
 
 A simple no-frills toolkit for managing data in models and
 collections. Views can be created through something like
@@ -243,7 +243,30 @@ maximum value for attribute, convert to number and add 1.
 
 Vertebrate has several custom events that may be listened for the sake of changing the view.
 
-### vertebrate:added
+### Collection Events
+
+The following events are triggered on the collection and the
+`$(document)`.
+
+##### Binding to a Collection
+
+It may be useful to bind to specific collections
+when there are more than one in use. To bind to a specific
+collection, make sure to explicitly wrap the collection in an
+array or jQuery will not trigger the event as
+`$(collection).length` will return 0. An example:
+
+```JavaScript
+$([collection]).on('vertebrate:added',function(event, collection.added, collection.models) {
+    //added a collection
+});
+```
+
+>Note that the collection itself will not be passed to the
+callback function as `this` will refer to the collection within
+the callback.
+
+#### vertebrate:added
 
 Triggered when a `collection.add()` is called. Example:
 
@@ -253,7 +276,7 @@ $(document).on('vertebrate:added',function(event, collection, collection.added, 
 })
 ```
 
-### vertebrate:removed
+#### vertebrate:removed
 
 Triggered when a `collection.remove()` is called. Example:
 
@@ -263,7 +286,7 @@ $(document).on('vertebrate:removed',function(event, collection, collection.remov
 });
 ```
 
-### vertebrate:fetched
+#### vertebrate:fetched
 
 Triggered when `collection.fetch()` is completed. Example:
 
@@ -273,7 +296,9 @@ $(document).on('vertebrate:fetched',function(event, collection, collection.model
 })
 ```
 
-### vertebrate:changedattr
+### Model Events
+
+#### vertebrate:changedattr
 
 Triggered when a `model.set()` is changed. Example:
 
@@ -283,7 +308,7 @@ $(document).on('vertebrate:changeattr',function(event, model, model.attributes, 
 });
 ```
 
-### vertebrate:deleted
+#### vertebrate:deleted
 
 Triggered when `model.delete()` is called. Example:
 
