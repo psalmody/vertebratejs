@@ -37,7 +37,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
             break;
     };
     $sql .= "ON DUPLICATE KEY UPDATE first_name=VALUES(first_name), mi = VALUES(mi),last_name=VALUES(last_name),age=VALUES(age),address=VALUES(address),city=VALUES(city),state=VALUES(state),zip=VALUES(zip),email=VALUES(email)";
-    echo $sql;
     $res = $db->query($sql) or die(mysqli_error($db));
     echo "saved";
     break;
