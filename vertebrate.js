@@ -1,16 +1,16 @@
 /**
-* Vertebrate.js 0.2.1
+* Vertebrate.js 0.2.2
 * https://github.com/psalmody/vertebratejs
 */
 
-(function() {
+var Vertebrate = (function($) {
 
     if (typeof($) == 'undefined') {
         console.log('%cError:','color:red;font-weight:bold','Vertebrate.js requires jQuery 1.11+');
         return false;
     }
 
-    Vertebrate = {
+    var Vertebrate = {
         settings: {},
         get: function(setting) {
             return (typeof(setting)) == 'undefined' ?
@@ -293,4 +293,6 @@
         return collection;
     };
 
-})();
+    return Vertebrate;
+
+}($));
