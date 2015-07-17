@@ -44,3 +44,6 @@ Temporary Items
 
 # MySQL Creds
 mysql-creds.php
+
+#grunt files
+node_modules
