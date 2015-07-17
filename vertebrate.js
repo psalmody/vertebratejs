@@ -1,8 +1,7 @@
 /**
-* Vertebrate.js 0.2.2
-* https://github.com/psalmody/vertebratejs
+*  Vertebrate.js 0.2.3
+*  https://github.com/psalmody/vertebratejs
 */
-
 var Vertebrate = (function($) {
 
     if (typeof($) == 'undefined') {
