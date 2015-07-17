@@ -18,6 +18,23 @@ Probably the most important setting would be `url` for the handler script. For e
 Vertebrate.set('url','php/handler.php');
 ```
 
+### Multiple Collections
+
+When using multiple collections with different types of models
+(where multiple server-side handlers might be needed) it is
+important to set the url both at the collection and model
+level. When setting model/collection type, add an url
+property.
+
+```JavaScript
+var model = Vertebrate.Model.Extend({
+    attributes: {
+        ...
+    },
+    url: 'somescript.php'
+})
+```
+
 ## Models
 
 ### Model Types
