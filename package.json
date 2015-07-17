@@ -1,0 +1,31 @@
+{
+  "name": "vertebratejs",
+  "version": "0.2.2",
+  "description": "Javascript toolkit for managing data in models and collections.",
+  "main": "vertebrate.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psalmody/vertebratejs.git"
+  },
+  "keywords": [
+    "models",
+    "collections",
+    "jquery",
+    "object-oriented"
+  ],
+  "author": "Michael Smith @psalmody",
+  "license": {
+      "type": "MIT License",
+      "url": "https://github.com/psalmody/vertebratejs/blob/master/mit-license.md"
+  },
+  "bugs": {
+    "url": "https://github.com/psalmody/vertebratejs/issues"
+  },
+  "homepage": "https://github.com/psalmody/vertebratejs"
+}
