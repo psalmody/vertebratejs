@@ -1,4 +1,4 @@
-# Vertebrate JS 0.2.4
+# Vertebrate JS 0.3.0
 
 A simple no-frills toolkit for managing data in models and
 collections. Views can be created through something like
@@ -274,7 +274,7 @@ array or jQuery will not trigger the event as
 `$(collection).length` will return 0. An example:
 
 ```JavaScript
-$([collection]).on('vertebrate:added',function(event, collection.added, collection.models) {
+$([collection]).on('vertebrate:added',function(event, model, collection.added) {
     //added a collection
 });
 ```
@@ -288,7 +288,7 @@ the callback.
 Triggered when a `collection.add()` is called. Example:
 
 ```JavaScript
-$(document).on('vertebrate:added',function(event, collection, collection.added, collection.models) {
+$(document).on('vertebrate:added',function(event, collection, model, collection.added) {
     //deal with add in view
 })
 ```
@@ -298,7 +298,7 @@ $(document).on('vertebrate:added',function(event, collection, collection.added, 
 Triggered when a `collection.remove()` is called. Example:
 
 ```JavaScript
-$(document).on('vertebrate:removed',function(event, collection, collection.removed, collection.models) {
+$(document).on('vertebrate:removed',function(event, collection, model, collection.removed) {
     //deal with the removal in view
 });
 ```
