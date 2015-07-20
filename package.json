@@ -1,6 +1,6 @@
 {
   "name": "vertebratejs",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Javascript toolkit for managing data in models and collections.",
   "main": "vertebrate.js",
   "directories": {

@@ -1,5 +1,5 @@
 /**
-*  Vertebrate.js 0.2.3
+*  Vertebrate.js 0.2.4
 *  https://github.com/psalmody/vertebratejs
 */
 var Vertebrate = (function($) {
@@ -65,7 +65,7 @@ var Vertebrate = (function($) {
             var promise = $.ajax({
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'POST',
-                data: { data: JSON.stringify(this.get()) },
+                data: JSON.stringify(this.get()),
                 success: function(data, status, xhr) {
                     self.changedattrs = [];
                     if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
@@ -144,7 +144,8 @@ var Vertebrate = (function($) {
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'POST',
                 data: {
-                    "data": JSON.stringify([this.get(), this.models])
+                    "attributes": JSON.stringify(this.get()),
+                    "models": JSON.stringify(this.models)
                 },
                 success: function(data, status, xhr) {
                     self.removed = [];
