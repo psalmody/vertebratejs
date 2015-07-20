@@ -66,14 +66,14 @@ $(function() {
     * Let's handle events for view
     */
 
-    $([ourteam]).on('vertebrate:added',function(e, added, allmodels) {
+    $([ourteam]).on('vertebrate:added',function(e, model, added) {
         //new model added to collection
-        console.log('added',added);
-        console.log('Now have ' + allmodels.length + ' models.');
+        console.log('added ', model);
+        console.log('Now have ' + ourteam.count() + ' models.');
         this.render();
-    }).on('vertebrate:removed',function(e, removed, models) {
+    }).on('vertebrate:removed',function(e, model, removed) {
         //removed model from collection
-        console.log('removed some model');
+        console.log('removed some model ', model);
     }).on('vertebrate:fetched',function(e, models) {
         //fetched data from collection
         console.log('Fetched from database.');
