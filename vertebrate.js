@@ -238,8 +238,8 @@ var Vertebrate = (function($) {
         this.add = function(model) {
             self.added.push(model);
             self.models.push(model);
-            $([self]).trigger('vertebrate:added', [self.added, self.models]);
-            $(document).trigger('vertebrate:added', [self, self.added, self.models]);
+            $([self]).trigger('vertebrate:added', [model, self.added]);
+            $(document).trigger('vertebrate:added', [self, model, self.added]);
             return self.models.length;
         };
         this.remove = function(model) {
@@ -248,8 +248,8 @@ var Vertebrate = (function($) {
             });
             self.models = newmodels;
             self.removed.push(model);
-            $([self]).trigger('vertebrate:removed', [self.removed, self.models]);
-            $(document).trigger('vertebrate:removed', [self, self.removed, self.models]);
+            $([self]).trigger('vertebrate:removed', [model, self.removed]);
+            $(document).trigger('vertebrate:removed', [self, model, self.removed]);
             return self.models.length;
         };
         /**
