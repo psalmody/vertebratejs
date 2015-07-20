@@ -1,5 +1,5 @@
 /**
-*  Vertebrate.js 0.2.4
+*  Vertebrate.js 0.3.0
 *  https://github.com/psalmody/vertebratejs
 */
 var Vertebrate = (function($) {
@@ -65,7 +65,7 @@ var Vertebrate = (function($) {
             var promise = $.ajax({
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'POST',
-                data: JSON.stringify(this.get()),
+                data: {"model":this.get()},
                 success: function(data, status, xhr) {
                     self.changedattrs = [];
                     if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
@@ -77,7 +77,7 @@ var Vertebrate = (function($) {
             var promise = $.ajax({
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'GET',
-                data: this.get(),
+                data: {"model":this.get()},
                 success: function(data, status, xhr) {
                     self.changedattrs = [];
                     self.attributes = $.extend(self.attributes, data[0]);
@@ -90,7 +90,7 @@ var Vertebrate = (function($) {
             var promise = $.ajax({
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'DELETE',
-                data: JSON.stringify(this.get()),
+                data: {"model":this.get()},
                 success: function(data, status, xhr) {
                     $([self]).trigger('vertebrate:deleted', [self, self.attributes, data, status, xhr]);
                     $(document).trigger('vertebrate:deleted', [self, self.attributes, data, status, xhr]);
@@ -140,16 +140,19 @@ var Vertebrate = (function($) {
         * clears this.removed[]
         */
         this.save = function(callback) {
+            var postdata = {
+                "collection": {
+                    "attributes": this.get(),
+                    "models": JSON.stringify(this.models)
+                }
+            };
             var promise = $.ajax({
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'POST',
-                data: {
-                    "attributes": JSON.stringify(this.get()),
-                    "models": JSON.stringify(this.models)
-                },
+                data: postdata,
                 success: function(data, status, xhr) {
                     self.removed = [];
-                    if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
+                    if (typeof(callback) == 'function') callback.call(self, data, status, xhr);
                 }
             });
             return promise;
@@ -169,7 +172,7 @@ var Vertebrate = (function($) {
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'GET',
                 dataType: 'JSON',
-                data: this.get(),
+                data: {"collection":this.get()},
                 success: function(data, status, xhr) {
                     self.models = [];
                     $.each(data, function(i) {
