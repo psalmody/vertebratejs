@@ -66,6 +66,7 @@ var Vertebrate = (function($) {
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'POST',
                 data: {"model":this.get()},
+                dataType: 'JSON',
                 success: function(data, status, xhr) {
                     self.changedattrs = [];
                     if (typeof(callback) == 'function') callback.call(self,data, status, xhr);
@@ -77,6 +78,7 @@ var Vertebrate = (function($) {
             var promise = $.ajax({
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'GET',
+                dataType: 'JSON',
                 data: {"model":this.get()},
                 success: function(data, status, xhr) {
                     self.changedattrs = [];
@@ -91,7 +93,7 @@ var Vertebrate = (function($) {
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'DELETE',
                 data: {"model":this.get()},
-                dataType: 'json',
+                dataType: 'JSON',
                 success: function(data, status, xhr) {
                     $([self]).trigger('vertebrate:deleted', [self, self.attributes, data, status, xhr]);
                     $(document).trigger('vertebrate:deleted', [self, self.attributes, data, status, xhr]);
@@ -151,6 +153,7 @@ var Vertebrate = (function($) {
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'POST',
                 data: postdata,
+                dataType: 'JSON',
                 success: function(data, status, xhr) {
                     self.removed = [];
                     if (typeof(callback) == 'function') callback.call(self, data, status, xhr);
