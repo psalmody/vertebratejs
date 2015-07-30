@@ -91,6 +91,7 @@ var Vertebrate = (function($) {
                 url: typeof(this.url) == 'undefined' ? Vertebrate.get('url') : this.url,
                 method: 'DELETE',
                 data: {"model":this.get()},
+                dataType: 'json',
                 success: function(data, status, xhr) {
                     $([self]).trigger('vertebrate:deleted', [self, self.attributes, data, status, xhr]);
                     $(document).trigger('vertebrate:deleted', [self, self.attributes, data, status, xhr]);
