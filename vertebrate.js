@@ -1,5 +1,5 @@
 /**
-*  Vertebrate.js 0.3.0
+*  Vertebrate.js 0.3.1
 *  https://github.com/psalmody/vertebratejs
 */
 var Vertebrate = (function($) {
