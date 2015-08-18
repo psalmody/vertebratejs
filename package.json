@@ -1,6 +1,6 @@
 {
   "name": "vertebratejs",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Javascript toolkit for managing data in models and collections.",
   "main": "vertebrate.js",
   "directories": {
@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/psalmody/vertebratejs",
   "devDependencies": {
-    "grunt": "^0.4.5"
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1"
   }
 }

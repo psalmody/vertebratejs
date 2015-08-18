@@ -1,7 +1,3 @@
-/**
-*  VertebrateJS v 0.3.2 by Michael Smith @psalmody
-*  https://github.com/psalmody/vertebratejs
-*/
 var Vertebrate = (function($) {
 
     if (typeof($) == 'undefined') {
