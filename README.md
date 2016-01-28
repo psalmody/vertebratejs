@@ -6,6 +6,16 @@ jQuery or React JS.
 
 See my [post on writing in VertebrateJS](http://psalmody.net/2015/07/17/writing-vertebratejs-a-simpler-approach-to-models-and-collections/).
 
+## Install
+
+Available on [bower](http://bower.io/) and [npm](https://www.npmjs.com/).
+
+```bash
+bower install vertebratejs
+
+npm install vertebratejs
+```
+
 ## Requirements
 
 Just jQuery.
