@@ -1,0 +1,24 @@
+{
+  "name": "vertebratejs",
+  "description": "Javascript toolkit for managing data in models and collections.",
+  "main": "vertebrate.js",
+  "authors": [
+    "Michael Smith @psalmody"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "models",
+    "collections",
+    "jquery",
+    "object-oriented"
+  ],
+  "homepage": "https://github.com/psalmody/vertebratejs",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

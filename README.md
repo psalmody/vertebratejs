@@ -1,4 +1,4 @@
-# Vertebrate JS 0.3.2
+# Vertebrate JS
 
 A simple no-frills toolkit for managing data in models and
 collections. Views can be created through something like
