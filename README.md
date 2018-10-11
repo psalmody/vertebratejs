@@ -4,8 +4,6 @@ A simple no-frills toolkit for managing data in models and
 collections. Views can be created through something like
 jQuery or React JS.
 
-See my [post on writing in VertebrateJS](http://psalmody.net/2015/07/17/writing-vertebratejs-a-simpler-approach-to-models-and-collections/).
-
 ## Install
 
 Available on [bower](http://bower.io/) and [npm](https://www.npmjs.com/).
